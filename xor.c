@@ -91,54 +91,46 @@ float cost(Xor m) {
 Xor finite_differences(Xor m, float epsilon) {
     // For each value I need to calculate the dw1, dw2, and db. 
     Xor saved_model = m;
+    Xor gradients;
     // We modify the model with a small differential, saving it in a new variable, and then calculating the cost of the new model compared to the previous model. Do this for all variables.
     saved_model.or.w1 += epsilon;
-    float dw1or = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.or.w1 = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.or.w2 += epsilon;
-    float dw2or = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.or.w2 = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.or.b += epsilon;
-    float dbiasor = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.or.b = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.nand.w1 += epsilon;
-    float dw1nand = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.nand.w1 = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.nand.w2 += epsilon;
-    float dw2nand = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.nand.w2 = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.nand.b += epsilon;
-    float dbiasnand = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.nand.b = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.and.w1 += epsilon;
-    float dw1and = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.and.w1 = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.and.w2 += epsilon;
-    float dw2and = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.and.w2 = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     saved_model.and.b += epsilon;
-    float dbiasand = (cost(saved_model) - cost(m)) / epsilon;
+    gradients.and.b = (cost(saved_model) - cost(m)) / epsilon;
     saved_model = m;
 
     // We return the model with the finite differences
-    saved_model.or.w1 = dw1or;
-    saved_model.or.w2 = dw2or;
-    saved_model.or.b = dbiasor;
-    saved_model.nand.w1 = dw1nand;
-    saved_model.nand.w2 = dw2nand;
-    saved_model.nand.b = dbiasnand;
-    saved_model.and.w1 = dw1and;
-    saved_model.and.w2 = dw2and;
-    saved_model.and.b = dbiasand;
-    return saved_model;
+    return gradients;
 }
 
 Xor apply_finite_differences(Xor m, Xor finite_differences, float rate) {
@@ -179,18 +171,7 @@ int main(void) {
         printf("Cost: %f\n", model_cost);
         Xor fd = finite_differences(m, eps);
         m = apply_finite_differences(m, fd, rate);
-
-        // float dw1 = (cost(m[neuron].w1 + epsilon) - c) / epsilon; // Gives us the direction of cost travel, the slope.
-        // float dw2 = (cost(w1, w2 + epsilon, b) - c) / epsilon;
-        // float dbias = (cost(w1, w2, b + epsilon) - c) / epsilon;
-
-        // w1 -= rate*dw1;
-        // w2 -= rate*dw2;
-        // b -= rate*dbias;
-
-        // printf("Cost: %f, w1: %f, w2: %f, Bias: %f\n", cost(m), w1, w2, b);
     }
-
     test_model(m);
     return 0;
 }
