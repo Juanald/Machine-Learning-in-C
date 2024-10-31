@@ -152,7 +152,8 @@ void test_model(Xor m) {
         float x2 = train[i][1];
         float y = train[i][2];
         float yPred = forward_propagate(m, x1, x2);
-        printf("Predicted: %f, Actual: %f\n", yPred, y);
+        // printf("Predicted: %f, Actual: %f\n", yPred, y);
+        printf("%f xor %f = %f, Actual: %f\n", x1, x2, yPred, y);
     }
 }
 
