@@ -29,7 +29,7 @@ cd src
 code main.c
 ```
 
-Edit the assigment `sample_train* train = nand_train;` to whatever training set you wish to train. Then run the model by running:
+Edit the assignment `sample_train* train = nand_train;` to whatever training set you wish to train. Then run the model by running:
 
 ```
 make main
